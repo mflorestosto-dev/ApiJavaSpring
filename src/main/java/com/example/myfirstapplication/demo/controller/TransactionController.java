@@ -4,6 +4,8 @@ import com.example.myfirstapplication.demo.model.Transaction;
 import com.example.myfirstapplication.demo.model.TransactionType;
 import com.example.myfirstapplication.demo.service.TransactionService;
 import jakarta.transaction.Transactional;
+import lombok.Data;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,15 @@ public class TransactionController {
     public TransactionController(TransactionService transactionService) {
         this.transactionService = transactionService;
     }
+
+    @Data
+    public static class TransactionRequest {
+        private Long originId;
+        private Long destinationId;
+        private String description;
+        private BigDecimal amount;
+        private TransactionType type;
+    }
     
     // Endpoint para obtener todas las transacciones de un usuario
     @GetMapping("/{userId}")
@@ -41,19 +52,19 @@ public class TransactionController {
     }
 
     @Transactional
-    @PostMapping("/{userId}")
-    public ResponseEntity<Map<String, Object>> createTransaction(@PathVariable Long userId, @RequestBody TransactionRequest transactionRequest) {
+    @PostMapping("/transaction")
+    public ResponseEntity<Map<String, Object>> createTransaction(@RequestBody TransactionRequest transactionRequest){
         Map<String, Object> response = new HashMap<>();
         try {
-            Transaction newTransaction = transactionService.createTransaction(
-                userId,
-                transactionRequest.getDescription(),
-                transactionRequest.getAmount(),
-                transactionRequest.getType()
+            transactionService.createTransaction(
+                transactionRequest.originId,
+                transactionRequest.destinationId,
+                transactionRequest.description,
+                transactionRequest.amount,
+                transactionRequest.type
             );
             response.put("success", true);
             response.put("message", "Transacción creada exitosamente.");
-            response.put("data", newTransaction);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             response.put("success", false);

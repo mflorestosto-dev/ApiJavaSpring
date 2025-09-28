@@ -23,8 +23,8 @@ public class TransactionService {
         this.userRepository = userRepository;
     }
 
-    public Transaction createTransaction(Long userId, String description, BigDecimal amount, TransactionType type) throws Exception {
-        Optional<User> userOptional = userRepository.findById(userId);
+    public Transaction createTransaction(Long originId, Long destinationId, String description, BigDecimal amount, TransactionType type) throws Exception {
+        Optional<User> userOptional = userRepository.findById(originId);
         if (userOptional.isEmpty()) {
             throw new Exception("Usuario no encontrado.");
         }
@@ -32,7 +32,7 @@ public class TransactionService {
         // La validación de fondos insuficientes debe ser manejada en el cliente
         // si el balance no se guarda en el servidor.
         
-        Transaction newTransaction = new Transaction(userId, description, amount, type, LocalDateTime.now());
+        Transaction newTransaction = new Transaction(originId, destinationId, amount, description, type, LocalDateTime.now());
         return transactionRepository.save(newTransaction);
     }
     

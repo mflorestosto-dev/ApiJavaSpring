@@ -22,14 +22,17 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId; 
+    @Column(name = "origin_id", nullable = false)
+    private Long originId; 
 
-    @Column(name = "description", nullable = false)
-    private String description;
+    @Column(name = "destination_id", nullable = false)
+    private Long destinationId;
 
     @Column(name = "amount", nullable = false, precision = 10, scale = 2) // Coincide con DECIMAL(10,2)
     private BigDecimal amount; 
+
+    @Column(name = "description", nullable = false)
+    private String description;
 
     @Enumerated(EnumType.STRING) 
     @Column(name = "type", nullable = false)
@@ -39,12 +42,14 @@ public class Transaction {
     private LocalDateTime transactionDate;
 
     // Constructor para crear nuevas instancias (sin ID)
-    public Transaction(Long userId, 
-                       String description, 
+    public Transaction(Long originId, 
+                       Long destinationId,
                        BigDecimal amount, 
+                       String description, 
                        TransactionType type, 
                        LocalDateTime transactionDate) {
-        this.userId = userId;
+        this.originId = originId;
+        this.destinationId = destinationId;
         this.description = description;
         this.amount = amount;
         this.type = type;
@@ -59,28 +64,20 @@ public class Transaction {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getOriginId() {
+        return originId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setOriginId(Long originId) {
+        this.originId = originId;
     }
 
-    public TransactionType getTransactionType() {
-        return type;
+    public Long getDestinationId() {
+        return destinationId;
     }
 
-    public void setTransactionType(TransactionType type) {
-        this.type = type;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
+    public void setDestinationId(Long destinationId) {
+        this.destinationId = destinationId;
     }
 
     public String getDescription() {
@@ -89,6 +86,22 @@ public class Transaction {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+       public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public TransactionType getTransactionType() {
+        return type;
+    }
+
+    public void setTransactionType(TransactionType type) {
+        this.type = type;
     }
 
     public LocalDateTime getTransactionDate() {
